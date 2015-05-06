@@ -1,3 +1,5 @@
+there's something wrong...
+
 # Weight-and-Color
 blender addon to convert weight paint to/from vertex color could be useful for external editing.
 
