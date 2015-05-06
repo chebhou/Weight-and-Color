@@ -18,7 +18,7 @@
 
 
 bl_info = {
-    "name": "Modifiers Linker",
+    "name": "Weight and color",
     "author": "Chebhou",
     "version": (1, 0),
     "blender": (2, 74, 0),
@@ -33,13 +33,6 @@ from bpy.props import EnumProperty, BoolProperty
 from mathutils import Color
 
 
-S = scene   = bpy.context.scene
-C = context = bpy.context
-D = data    = bpy.data
-O = ops     = bpy.ops
-
-obj = bpy.context.active_object
-obj_data = obj.data
 
 def convert(value, method):
     if method == 'BW2W':
@@ -55,7 +48,10 @@ def convert(value, method):
         return  col
 
           
-def vert_col2weight(color,zero_weight):    
+def vert_col2weight(color,zero_weight):
+
+    obj = bpy.context.active_object
+    obj_data = obj.data
     color_maps = obj_data.vertex_colors
     for color_map in color_maps :
         group_name = color_map.name
@@ -79,7 +75,10 @@ def vert_col2weight(color,zero_weight):
                             obj.vertex_groups[group_ind].add([vert_ind], weight,'REPLACE')
 
                                        
-def weight2vert_col(color):               
+def weight2vert_col(color): 
+
+    obj = bpy.context.active_object
+    obj_data = obj.data              
     vert_groups = obj.vertex_groups
     col = Color()
     for vert_g in vert_groups:
@@ -163,12 +162,11 @@ def addObject(self, context):
     icon = 'VPAINT_HLT')
     
 def register():
-    bpy.utils.register_class(weight_color)      
-    bpy.types.VIEW3D_MT_object.append(addObject)
+    bpy.utils.register_module(__name__)
 
-def unregister(): 
-    bpy.types.VIEW3D_MT_object.remove(addObject)
-    bpy.utils.unregister_class(weight_color)
+def unregister():
+    bpy.utils.unregister_module(__name__) 
+
 
 if __name__ == "__main__":  
     register()
