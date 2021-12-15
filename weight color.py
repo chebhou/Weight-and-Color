@@ -20,8 +20,8 @@
 bl_info = {
     "name": "Weight and color",
     "author": "Chebhou",
-    "version": (1, 0),
-    "blender": (2, 74, 0),
+    "version": (1, 1),
+    "blender": (3, 0, 0),
     "location": "Space bar -> \"weight & color\" ",
     "description": "convert weight paint to/from vertex color",
     "category": "Object",
@@ -38,7 +38,7 @@ def convert(value, method):
     if method == 'BW2W':
         return  (value.r + value.g+ value.b)/3
     elif method == 'W2BW':
-        col = Color((value, value, value))
+        col = [value, value, value, 1]
         return col
     elif method == 'HSV2W':
         return  1-(value.h / 0.66)
@@ -66,6 +66,7 @@ def vert_col2weight(color,zero_weight):
                     for loop_ind in poly.loop_indices:
                         vert_ind =obj_data.loops[loop_ind].vertex_index  
                         col = color_map.data[loop_ind].color
+                        col = Color((col[0], col[1], col[2]))
                         if color == 'BW':
                             weight = convert(col, 'BW2W')
                         else :
@@ -106,7 +107,7 @@ def weight2vert_col(color):
                         else :
                             col = convert(weight, 'W2HSV')
                         #assign to the color map
-                        color_map.data[loop_ind].color = col
+                        color_map.data[loop_ind].color = [col[0], col[1], col[2], 1]
                                            
     
 class   weight_color(Operator):  
@@ -117,21 +118,21 @@ class   weight_color(Operator):
     bl_options = {'REGISTER', 'UNDO'}    #should remove undo ? 
     
     #parameters and variables
-    convert = EnumProperty(
+    convert : EnumProperty(
                 name="Convert",
                 description="Choose conversion",
                 items=(('W2C', "Weight to vertex color", "convert weight to vertex color"),
                        ('C2W', "Vertex color to weight", "convert vertex color to weight")),
                 default='W2C',
                 )
-    color = EnumProperty(
+    color : EnumProperty(
                 name="Color type",
                 description="Choose a color system",
                 items=(('BW', "Gray scale", "map weight to grayscale"),
                        ('HSV', "RGB color", "map weight to rgb colors")),
                 default='HSV',
                 )
-    zero_weight = BoolProperty(
+    zero_weight : BoolProperty(
                     name = "use zero weight",
                     description="add vertices with 0 weight to vertex groups",
                     default = 0,
@@ -162,13 +163,12 @@ def addObject(self, context):
     icon = 'VPAINT_HLT')
     
 def register():
-    bpy.utils.register_module(__name__)
+    bpy.utils.register_class(weight_color)
 
 def unregister():
-    bpy.utils.unregister_module(__name__) 
+    bpy.utils.unregister_class(weight_color)
 
 
 if __name__ == "__main__":  
     register()
-
 

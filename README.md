@@ -2,6 +2,8 @@
 # Weight-and-Color
 blender addon to convert weight paint to/from vertex color could be useful for external editing.
 
+Note from Neop: This plugin works with Blender 3.0 now, versions before that don't seem to load it. The original code works up to 2.79.
+
 install the addon :
  
 - Download the Zip file
